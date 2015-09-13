@@ -6,9 +6,14 @@ import IQuery.Event
 import IQuery.Elements
 import IQuery.State
 
+private %inline
+jscall : (fname : String) -> (ty : Type) ->
+          {auto fty : FTy FFI_JS [] ty} -> ty
+jscall fname ty = foreign FFI_JS fname ty
+
 %access public
 
-alert : String -> IO ()
+alert : String -> JS_IO ()
 alert msg =
-  mkForeign (FFun "alert(%0)" [FString] FUnit) msg
+  jscall "alert(%0)" (String -> JS_IO ()) msg
 
